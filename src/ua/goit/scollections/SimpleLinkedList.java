@@ -5,15 +5,19 @@ import java.util.Arrays;
 public class SimpleLinkedList<T> implements SimpleList <T> {
 
     private Node<T> last;
+    private Node<T> first;
+    private int capacity;
 
     public void add(T item) {
-        if (last == null) {
-            last = new Node<T>(item,null,null);
+        if (first == null) {
+            first = new Node<T>(item,null,null);
+            last = first;
         } else {
             Node<T> newItem = new Node<>(item,last,null);
             last.setNext(newItem);
-
+            last = newItem;
         }
+        capacity++;
     }
 
     public void remove(int index) {
