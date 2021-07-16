@@ -26,4 +26,12 @@ public class Node<T> {
     public void setPrev(Node<T> prev) {
         this.prev = prev;
     }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
 }
