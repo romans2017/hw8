@@ -5,9 +5,14 @@ import java.util.Arrays;
 public class SimpleArrayList<T> implements SimpleList<T> {
 
     private T[] array;
-    private int capacity; //number of not-null Objects in array
 
-    public SimpleArrayList(int initLength) {
+    private void checkIndex(int index) {
+        if (index < 0 || index > array.length - 1) {
+            throw new IndexOutOfBoundsException("Index out of LinkedList capacity");
+        }
+    }
+
+    public SimpleArrayList(int initLength) throws IllegalArgumentException {
         if (initLength >= 0) {
             this.array = (T[]) new Object[initLength];
         } else {
@@ -20,43 +25,31 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     }
 
     public void add(T item) {
-        if (capacity == array.length) {
-            array = Arrays.copyOf(array, capacity+1);
-        }
-        array[capacity] = item;
-        capacity++;
+        array = Arrays.copyOf(array, array.length + 1);
+        array[array.length - 1] = item;
     }
 
-    public void remove(int index) {
-        int length = array.length;
-        if (index <= length - 1) {
-            System.arraycopy(array,index+1, array, index,length-index-1);
-            array[length-1] = null;
-            capacity--;
-        } else {
-            throw new IndexOutOfBoundsException("Index out of length ArrayList");
-        }
-
+    public void remove(int index) throws IndexOutOfBoundsException {
+        checkIndex(index);
+        System.arraycopy(array, index + 1, array, index, array.length - index - 1);
+        array = Arrays.copyOf(array, array.length - 1);
     }
 
     public void clear() {
         array = (T[]) new Object[]{};
-        capacity = 0;
     }
 
     public int size() {
-        return capacity;
+        return array.length;
     }
 
-    public T get(int index) {
-        if (index <= capacity-1) {
-            return array[index];
-        } else {
-            throw new IndexOutOfBoundsException("Index out of capacity ArrayList");
-        }
+    public T get(int index) throws IndexOutOfBoundsException {
+        checkIndex(index);
+        return array[index];
     }
 
-    public T[] toArray() {
-        return array;
+    @Override
+    public String toString() {
+        return Arrays.toString(array);
     }
 }

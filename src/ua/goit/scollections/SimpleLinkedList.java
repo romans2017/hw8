@@ -1,39 +1,81 @@
 package ua.goit.scollections;
 
-import java.util.Arrays;
-
-public class SimpleLinkedList<T> implements SimpleList <T> {
+public class SimpleLinkedList<T> implements SimpleList<T> {
 
     private Node<T> last;
     private Node<T> first;
     private int capacity;
 
+    private Node<T> getNode(int index) throws IndexOutOfBoundsException {
+        checkIndex(index);
+        if (index <= capacity / 2) {
+            Node<T> item = first;
+            for (int i = 0; i <= capacity / 2; i++) {
+                if (i == index) {
+                    return item;
+                }
+                item = item.getNext();
+            }
+        } else {
+            Node<T> item = last;
+            for (int i = capacity - 1; i > capacity / 2; i--) {
+                if (i == index) {
+                    return item;
+                }
+                item = item.getPrev();
+            }
+        }
+        return null;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > capacity - 1) {
+            throw new IndexOutOfBoundsException("Index out of LinkedList capacity");
+        }
+    }
+
     public void add(T item) {
         if (first == null) {
-            first = new Node<T>(item,null,null);
+            first = new Node<T>(item, null, null);
             last = first;
         } else {
-            Node<T> newItem = new Node<>(item,last,null);
+            Node<T> newItem = new Node<>(item, last, null);
             last.setNext(newItem);
             last = newItem;
         }
         capacity++;
     }
 
-    public void remove(int index) {
-        int length = array.length;
-        if (index <= length - 1) {
-            System.arraycopy(array,index+1, array, index,length-index-1);
-            array[length-1] = null;
-            capacity--;
-        } else {
-            throw new IndexOutOfBoundsException("Index out of length ArrayList");
-        }
+    public void remove(int index) throws IndexOutOfBoundsException {
+        checkIndex(index);
 
+        Node<T> item = getNode(index);
+        Node<T> prevItem = item.getPrev();
+        Node<T> nextItem = item.getNext();
+        if (prevItem != null) {
+            prevItem.setNext(nextItem);
+        }
+        if (nextItem != null) {
+            nextItem.setPrev(prevItem);
+        }
+        if (item == first) {
+            first = nextItem;
+        }
+        if (item == last) {
+            last = prevItem;
+        }
+        capacity--;
     }
 
     public void clear() {
-        array = (T[]) new Object[]{};
+        for (Node<T> item = first; item != null; ) {
+            Node<T> temp = item.getNext();
+            item.setValue(null);
+            item.setPrev(null);
+            item.setNext(null);
+            item = temp;
+        }
+        first = last = null;
         capacity = 0;
     }
 
@@ -42,14 +84,19 @@ public class SimpleLinkedList<T> implements SimpleList <T> {
     }
 
     public T get(int index) {
-        if (index <= capacity-1) {
-            return array[index];
-        } else {
-            throw new IndexOutOfBoundsException("Index out of capacity ArrayList");
-        }
+        return getNode(index).getValue();
     }
 
-    public T[] toArray() {
-        return array;
+    @Override
+    public String toString() {
+        StringBuilder listToString = new StringBuilder();
+        for (Node<T> item = first; item != null; ) {
+            listToString.append(item.getValue().toString());
+            if (item != last) {
+                listToString.append("<->");
+            }
+            item = item.getNext();
+        }
+        return listToString.toString();
     }
 }
