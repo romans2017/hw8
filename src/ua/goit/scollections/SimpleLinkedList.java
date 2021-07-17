@@ -6,6 +6,14 @@ public class SimpleLinkedList<T> implements SimpleList<T> {
     private Node<T> first;
     private int capacity;
 
+    protected Node<T> getLast() {
+        return last;
+    }
+
+    protected Node<T> getFirst() {
+        return first;
+    }
+
     private Node<T> getNode(int index) throws IndexOutOfBoundsException {
         checkIndex(index);
         if (index <= capacity / 2) {
