@@ -2,6 +2,42 @@ package ua.goit.scollections;
 
 public class SimpleLinkedList<T> implements SimpleList<T> {
 
+    protected static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
+            this.prev = prev;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+    }
+
     private Node<T> last;
     private Node<T> first;
     private int capacity;
@@ -44,7 +80,7 @@ public class SimpleLinkedList<T> implements SimpleList<T> {
 
     public void add(T item) {
         if (first == null) {
-            first = new Node<T>(item, null, null);
+            first = new Node<>(item, null, null);
             last = first;
         } else {
             Node<T> newItem = new Node<>(item, last, null);

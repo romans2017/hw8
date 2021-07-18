@@ -1,26 +1,23 @@
-import ua.goit.scollections.SimpleArrayList;
-import ua.goit.scollections.SimpleLinkedList;
-import ua.goit.scollections.SimpleQueue;
-import ua.goit.scollections.SimpleStack;
+import ua.goit.scollections.*;
 
 class Test1 {
     @Override
     public String toString() {
-        return "Test1";
+        return "Test1" + hashCode();
     }
 }
 
 class Test2 extends Test1 {
     @Override
     public String toString() {
-        return "Test2";
+        return "Test2" + hashCode();
     }
 }
 
 class Test3 extends Test1 {
     @Override
     public String toString() {
-        return "Test3";
+        return "Test3" + hashCode();
     }
 }
 
@@ -33,20 +30,17 @@ public class test {
         arrayList.add(new Test3());
         System.out.println(arrayList.toString());
         arrayList.remove(2);
-        //arrayList.remove(0);
         System.out.println(arrayList.toString());
         arrayList.add(new Test2());
         arrayList.remove(0);
         System.out.println(arrayList.toString());
         System.out.println(arrayList.size());
-        //System.out.println(arrayList.get(2));
-        //System.out.println(arrayList.get(5));
         arrayList.clear();
         System.out.println(arrayList.toString());
     }
 
     static void testLinkedList() {
-        SimpleLinkedList<Integer> linkedList = new SimpleLinkedList<Integer>();
+        SimpleLinkedList<Integer> linkedList = new SimpleLinkedList<>();
         linkedList.add(1);
         linkedList.add(2);
         linkedList.add(3);
@@ -89,11 +83,36 @@ public class test {
         System.out.println(stack.peek());
     }
 
+    static void testHashMap() {
+        SimpleHashMap<Test1, String> hashMap = new SimpleHashMap<>(8);
+        Test1 test1 = new Test1();
+        Test1 test2 = new Test2();
+        Test1 test3 = new Test3();
+        Test1 test4 = new Test3();
+        hashMap.put(test1, "NULLL");
+        hashMap.put(test2, "100");
+        hashMap.put(test3, "poiuyt");
+        hashMap.put(test4, "789");
+        System.out.println(hashMap);
+        System.out.println(hashMap.size());
+        System.out.println(hashMap.get(test1));
+        hashMap.remove(test2);
+        System.out.println(hashMap);
+        System.out.println(hashMap.size());
+        hashMap.put(test3, "qwerty");
+        System.out.println(hashMap);
+        System.out.println(hashMap.size());
+        hashMap.clear();
+        System.out.println(hashMap);
+        System.out.println(hashMap.size());
+    }
+
     public static void main(String[] args) {
 
-        //testArraylist();
-        //testLinkedList();
-        //testQueue();
+        testArraylist();
+        testLinkedList();
+        testQueue();
         testStack();
+        testHashMap();
     }
 }
