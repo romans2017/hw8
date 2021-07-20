@@ -3,10 +3,12 @@ package ua.goit.scollections;
 public class SimpleHashMap<K, V> {
 
     private final static int DEFAULT_NUMBER_BUCKETS = 16;
+    private final static float DEFAULT_LOAD_FACTOR = 0.75f;
 
-    private final int numberBuckets;
-    private final Node<K, V>[] map;
+    private int numberBuckets;
+    private Node<K, V>[] map;
     private int capacity;
+    private final float loadFactor;
 
     /**
      * The class Node is intended to represent data as Linked List in every bucket of Hash Map
@@ -47,14 +49,26 @@ public class SimpleHashMap<K, V> {
     }
 
     @SuppressWarnings("unchecked")
-    public SimpleHashMap(int numberBuckets) {
+    public SimpleHashMap(int numberBuckets, float loadFactor) throws IllegalArgumentException {
+        if (numberBuckets <= 0 || loadFactor <= 0) {
+            throw new IllegalArgumentException("Number of buckets and load factor must be positive");
+        }
         this.numberBuckets = numberBuckets;
+        this.loadFactor = loadFactor;
         map = (Node<K, V>[]) new Node[numberBuckets];
         capacity = 0;
     }
 
+    public SimpleHashMap(int numberBuckets) {
+        this(numberBuckets, DEFAULT_LOAD_FACTOR);
+    }
+
     public SimpleHashMap() {
-        this(DEFAULT_NUMBER_BUCKETS);
+        this(DEFAULT_NUMBER_BUCKETS, DEFAULT_LOAD_FACTOR);
+    }
+
+    public int getNumberBuckets() {
+        return numberBuckets;
     }
 
     /**
@@ -73,27 +87,38 @@ public class SimpleHashMap<K, V> {
      * @param hashKey hash of Key of Node
      * @return int
      */
-    private int getIndexBucket(int hashKey) {
+    private int getIndexBucket(int hashKey, int numberBuckets) {
         return hashKey % numberBuckets;
     }
 
-    /**
-     * Puts @value into Hash Map
-     *
-     * @param key   Key of Node
-     * @param value Value of Node
-     */
+    @SuppressWarnings("unchecked")
+    private void rebuildMap() {
+        int newNumberBuckets = (-1 >>> Integer.numberOfLeadingZeros(map.length - 1)) + 1;
+        if (newNumberBuckets == numberBuckets) {
+            newNumberBuckets <<= 1;
+        }
+        Node<K, V>[] newMap = (Node<K, V>[]) new Node[newNumberBuckets];
+        for (Node<K, V> kvNode : map) {
+            Node<K, V> entry = kvNode;
+            while (entry != null) {
+                putEntry(entry.getKey(), entry.getValue(), newMap, newNumberBuckets);
+                entry = entry.getNext();
+            }
+        }
+        map = newMap;
+        numberBuckets = newNumberBuckets;
+    }
 
-    public void put(K key, V value) {
-        int indexBucket = getIndexBucket(hashKey(key));
+    private void putEntry(K key, V value, Node<K, V>[] entries, int numberBuckets) {
+        int indexBucket = getIndexBucket(hashKey(key), numberBuckets);
         Node<K, V> newNode = new Node<>(key, value, null);
 
-        if (map[indexBucket] == null) {
-            map[indexBucket] = newNode;
+        if (entries[indexBucket] == null) {
+            entries[indexBucket] = newNode;
         } else {
-            Node<K, V> last = map[indexBucket];
+            Node<K, V> last = entries[indexBucket];
             boolean isCollision = false;
-            for (Node<K, V> item = map[indexBucket]; item != null; ) {
+            for (Node<K, V> item = entries[indexBucket]; item != null; ) {
                 if (item.getKey().equals(key)) {
                     item.setValue(value);
                     isCollision = true;
@@ -106,7 +131,20 @@ public class SimpleHashMap<K, V> {
                 last.setNext(newNode);
             }
         }
+    }
+
+    /**
+     * Puts @value into Hash Map
+     *
+     * @param key   Key of Node
+     * @param value Value of Node
+     */
+    public void put(K key, V value) {
+        putEntry(key, value, map, numberBuckets);
         capacity++;
+        if ((float) capacity > (float) map.length * loadFactor) {
+            rebuildMap();
+        }
     }
 
     /**
@@ -116,7 +154,7 @@ public class SimpleHashMap<K, V> {
      * @return Object V
      */
     public V get(K key) {
-        int indexBucket = getIndexBucket(hashKey(key));
+        int indexBucket = getIndexBucket(hashKey(key), numberBuckets);
 
         for (Node<K, V> item = map[indexBucket]; item != null; ) {
             if (item.getKey().equals(key)) {
@@ -133,7 +171,7 @@ public class SimpleHashMap<K, V> {
      * @param key Key of Node
      */
     public void remove(K key) {
-        int indexBucket = getIndexBucket(hashKey(key));
+        int indexBucket = getIndexBucket(hashKey(key), numberBuckets);
 
         Node<K, V> prev = map[indexBucket];
         for (Node<K, V> item = map[indexBucket]; item != null; ) {

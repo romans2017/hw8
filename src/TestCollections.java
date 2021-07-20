@@ -94,12 +94,13 @@ public class TestCollections {
     static void testHashMap() {
         System.out.println();
         System.out.println("Test HashMap");
-        SimpleHashMap<String, String> hashMap = new SimpleHashMap<>();
-        for (int i = 0; i < 200; i++) {
-            hashMap.put(Integer.toString(i+1), Integer.toString(i));
+        SimpleHashMap<String, String> hashMap = new SimpleHashMap<>(16);
+        for (int i = 0; i < 20; i++) {
+            hashMap.put(Integer.toString(i), Integer.toString(i));
         }
         System.out.println(hashMap);
         System.out.println(hashMap.size());
+        System.out.println(hashMap.getNumberBuckets());
         System.out.println(hashMap.get("66"));
         hashMap.remove("66");
         System.out.println(hashMap);
