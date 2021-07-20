@@ -12,6 +12,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public SimpleArrayList(int initLength) throws IllegalArgumentException {
         if (initLength >= 0) {
             this.array = (T[]) new Object[initLength];
@@ -29,20 +30,25 @@ public class SimpleArrayList<T> implements SimpleList<T> {
         array[array.length - 1] = item;
     }
 
+    @Override
     public void remove(int index) throws IndexOutOfBoundsException {
         checkIndex(index);
         System.arraycopy(array, index + 1, array, index, array.length - index - 1);
         array = Arrays.copyOf(array, array.length - 1);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public void clear() {
         array = (T[]) new Object[]{};
     }
 
+    @Override
     public int size() {
         return array.length;
     }
 
+    @Override
     public T get(int index) throws IndexOutOfBoundsException {
         checkIndex(index);
         return array[index];

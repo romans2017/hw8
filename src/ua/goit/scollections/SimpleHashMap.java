@@ -46,6 +46,7 @@ public class SimpleHashMap<K, V> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public SimpleHashMap(int numberBuckets) {
         this.numberBuckets = numberBuckets;
         map = (Node<K, V>[]) new Node[numberBuckets];

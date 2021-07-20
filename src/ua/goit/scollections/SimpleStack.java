@@ -1,6 +1,6 @@
 package ua.goit.scollections;
 
-public class SimpleStack<T> extends SimpleLinkedList<T> {
+public class SimpleStack<T> extends SimpleDeque<T> {
 
     public T peek() {
         if (size() == 0) {
@@ -11,7 +11,7 @@ public class SimpleStack<T> extends SimpleLinkedList<T> {
     }
 
     public void push(T item) {
-        add(item);
+        super.add(item);
     }
 
     public T pop() {

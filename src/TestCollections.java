@@ -21,9 +21,11 @@ class Test3 extends Test1 {
     }
 }
 
-public class test {
+public class TestCollections {
 
     static void testArraylist() {
+        System.out.println();
+        System.out.println("Test ArrayList");
         SimpleArrayList<Test1> arrayList = new SimpleArrayList<>();
         arrayList.add(new Test1());
         arrayList.add(new Test2());
@@ -40,6 +42,8 @@ public class test {
     }
 
     static void testLinkedList() {
+        System.out.println();
+        System.out.println("Test LinkedList");
         SimpleLinkedList<Integer> linkedList = new SimpleLinkedList<>();
         linkedList.add(1);
         linkedList.add(2);
@@ -58,6 +62,8 @@ public class test {
     }
 
     static void testQueue() {
+        System.out.println();
+        System.out.println("Test Queue");
         SimpleQueue<Integer> queue = new SimpleQueue<>();
         System.out.println(queue.poll());
         System.out.println(queue.peek());
@@ -71,35 +77,34 @@ public class test {
     }
 
     static void testStack() {
+        System.out.println();
+        System.out.println("Test Stack");
         SimpleStack<Integer> stack = new SimpleStack<>();
         System.out.println(stack.pop());
         System.out.println(stack.peek());
         stack.push(1);
-        stack.add(3);
-        stack.add(5);
-        stack.add(4);
+        stack.push(3);
+        stack.push(5);
+        stack.push(4);
         System.out.println(stack.toString());
         System.out.println(stack.pop());
         System.out.println(stack.peek());
     }
 
     static void testHashMap() {
-        SimpleHashMap<Test1, String> hashMap = new SimpleHashMap<>(8);
-        Test1 test1 = new Test1();
-        Test1 test2 = new Test2();
-        Test1 test3 = new Test3();
-        Test1 test4 = new Test3();
-        hashMap.put(test1, "NULLL");
-        hashMap.put(test2, "100");
-        hashMap.put(test3, "poiuyt");
-        hashMap.put(test4, "789");
+        System.out.println();
+        System.out.println("Test HashMap");
+        SimpleHashMap<String, String> hashMap = new SimpleHashMap<>();
+        for (int i = 0; i < 200; i++) {
+            hashMap.put(Integer.toString(i+1), Integer.toString(i));
+        }
         System.out.println(hashMap);
         System.out.println(hashMap.size());
-        System.out.println(hashMap.get(test1));
-        hashMap.remove(test2);
+        System.out.println(hashMap.get("66"));
+        hashMap.remove("66");
         System.out.println(hashMap);
         System.out.println(hashMap.size());
-        hashMap.put(test3, "qwerty");
+        hashMap.put("888", "888");
         System.out.println(hashMap);
         System.out.println(hashMap.size());
         hashMap.clear();
@@ -108,7 +113,6 @@ public class test {
     }
 
     public static void main(String[] args) {
-
         testArraylist();
         testLinkedList();
         testQueue();
